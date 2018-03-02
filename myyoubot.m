@@ -163,6 +163,8 @@ function myyoubot()
 %                  0, 0, 'ob',...
 %                  h.hokuyo1Pos(1), h.hokuyo1Pos(2), 'or',...
 %                  h.hokuyo2Pos(1), h.hokuyo2Pos(2), 'or');
+           subplot(1,2,1)
+           hold on
            plot(pts(1, contacts), pts(2, contacts), '*');
            
            toSaveprev = [transpose(pts(1, contacts)) transpose(pts(2, contacts))];
@@ -173,13 +175,22 @@ function myyoubot()
                 toSave = union(toSave,toSaveprev,'rows');
            end
            
-           hold on
+           
+           
             plot(youbotPos(1),youbotPos(2),'go');
             axis([-10, 10, -10, 10]);
             axis equal;
             %axis([-5.5, 5.5, -5.5, 2.5]);
             %axis equal;
             drawnow;
+            hold off
+            
+            subplot(1,2,2)
+            hold on
+             plot([h.hokuyo1Pos(1), pts(1, :), h.hokuyo2Pos(1)], [h.hokuyo1Pos(2), pts(2, :), h.hokuyo2Pos(2)])
+            axis([-10, 10, -10, 10]);
+            axis equal;
+             hold off
         end
         angl = -pi/2;
 
