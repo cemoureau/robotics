@@ -1,4 +1,5 @@
 function myyoubot()
+
     % youbot Illustrates the V-REP Matlab bindings.
 
     % (C) Copyright Renaud Detry 2013, Thibaut Cuvelier 2017, Mathieu Baijot 2017.
@@ -192,42 +193,42 @@ function myyoubot()
             if (abs(angdiff(angl, youbotEuler(3))) < .1 / 180 * pi) && ...
                     (abs(angdiff(prevOrientation, youbotEuler(3))) < .01 / 180 * pi)
                 rotateRightVel = 0;
-                fsm = 'finished';%'snapshot';%'drive';
+                fsm ='drive'; %'finished';%'snapshot';%'drive';
             end
             
             prevOrientation = youbotEuler(3);
-%          elseif strcmp(fsm, 'drive')
-%             %% Then, make it move straight ahead until it reaches the table (x = 3.167 m). 
-%             % The further the robot, the faster it drives. (Only check for the first dimension.)
-%             % For the project, you should not use a predefined value, but rather compute it from your map. 
-%             forwBackVel = - (youbotPos(1) + 3.167);
-% 
-%             % If the robot is sufficiently close and its speed is sufficiently low, stop it and move its arm to 
-%             % a specific location before moving on to the next state.
-%             if (youbotPos(1) + 3.167 < .001) && (abs(youbotPos(1) - prevPosition) < .001)
-%                 forwBackVel = 0;
-%                 
-%                 % Change the orientation of the camera to focus on the table (preparation for next state). 
-%                 vrep.simxSetObjectOrientation(id, h.rgbdCasing, h.ref, [0, 0, pi/4], vrep.simx_opmode_oneshot);
-%                 
-%                 % Move the arm to the preset pose pickupJoints (only useful for this demo; you should compute it based
-%                 % on the object to grasp). 
-%                 for i = 1:5
-%                     res = vrep.simxSetJointTargetPosition(id, h.armJoints(i), pickupJoints(i),...
-%                                                           vrep.simx_opmode_oneshot);
-%                     vrchk(vrep, res, true);
-%                 end
-% 
-%                 fsm = 'snapshot';
-%             end
-%             prevPosition = youbotPos(1);
+         elseif strcmp(fsm, 'drive')
+            %% Then, make it move straight ahead until it reaches the table (x = 3.167 m). 
+            % The further the robot, the faster it drives. (Only check for the first dimension.)
+            % For the project, you should not use a predefined value, but rather compute it from your map. 
+            forwBackVel = - (youbotPos(1) + 3.167);
+
+            % If the robot is sufficiently close and its speed is sufficiently low, stop it and move its arm to 
+            % a specific location before moving on to the next state.
+            if (youbotPos(1) + 3.167 < .001) && (abs(youbotPos(1) - prevPosition) < .001)
+                forwBackVel = 0;
+                
+                % Change the orientation of the camera to focus on the table (preparation for next state). 
+                vrep.simxSetObjectOrientation(id, h.rgbdCasing, h.ref, [0, 0, pi/4], vrep.simx_opmode_oneshot);
+                
+                % Move the arm to the preset pose pickupJoints (only useful for this demo; you should compute it based
+                % on the object to grasp). 
+                for i = 1:5
+                    res = vrep.simxSetJointTargetPosition(id, h.armJoints(i), pickupJoints(i),...
+                                                          vrep.simx_opmode_oneshot);
+                    vrchk(vrep, res, true);
+                end
+
+                fsm = 'finished';%'snapshot';
+            end
+            prevPosition = youbotPos(1);
         
         elseif strcmp(fsm, 'finished')
             %% Demo done: exit the function. 
             pause(3);
             break;
         else
-            error('Unknown state %s.', fsm);
+            %error('Unknown state %s.', fsm);
         end
         
         % Update wheel velocities using the global values (whatever the state is). 
@@ -243,5 +244,7 @@ function myyoubot()
     
     figure;
     plot(toSave(:,1),toSave(:,2),'*');
+    axis([-10, 10, -10, 10]);
+    axis equal;
 
 end % main function
