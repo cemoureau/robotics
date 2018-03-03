@@ -187,7 +187,10 @@ function myyoubot()
             
             subplot(1,2,2)
             hold on
+            plot(youbotPos(1),youbotPos(2),'go');
              plot([h.hokuyo1Pos(1), pts(1, :), h.hokuyo2Pos(1)], [h.hokuyo1Pos(2), pts(2, :), h.hokuyo2Pos(2)])
+            fill([h.hokuyo1Pos(1), pts(1, :), h.hokuyo2Pos(1)], [h.hokuyo1Pos(2), pts(2, :), h.hokuyo2Pos(2)],'b')
+            plot(youbotPos(1),youbotPos(2),'go');
             axis([-10, 10, -10, 10]);
             axis equal;
              hold off
@@ -209,6 +212,7 @@ function myyoubot()
             
             prevOrientation = youbotEuler(3);
          elseif strcmp(fsm, 'drive')
+             fprintf('Switching to state: %s\n', fsm);
             %% Then, make it move straight ahead until it reaches the table (x = 3.167 m). 
             % The further the robot, the faster it drives. (Only check for the first dimension.)
             % For the project, you should not use a predefined value, but rather compute it from your map. 
@@ -231,6 +235,7 @@ function myyoubot()
                 end
 
                 fsm = 'finished';%'snapshot';
+                fprintf('Switching to state: %s\n', fsm);
             end
             prevPosition = youbotPos(1);
         
