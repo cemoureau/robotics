@@ -164,14 +164,15 @@ function parcoursPieceSuite(arg)
             plot(boundaries(:,1),boundaries(:,2),'r*');
             hold off
 
-            i = round(toSave(:,1).*100);
-            j = round(toSave(:,2).*100);
-            v = ones(length(toSave),1);
+            figure;
+            i = round(toSave(:,1).*10);
+            j = round(toSave(:,2).*10);
+            %v = ones(length(i),1);
             
             minI = min(i);
             minJ = min(j);
-            minBi = min(round(toSave2(:,1).*100));
-            minBj = min(round(toSave2(:,2).*100));
+            minBi = min(round(toSave2(:,1).*10));
+            minBj = min(round(toSave2(:,2).*10));
             
             addI = - min(minI,minBi) +1;
             addJ = - min(minJ,minBj) +1;
@@ -180,18 +181,13 @@ function parcoursPieceSuite(arg)
             nonegi = double(i + addI);
             nonegj = double(j + addJ);
             
-            map = sparse(nonegi,nonegj,v);
+            map = sparse(nonegi,nonegj,1);
+            map(map>1)=1;
             
-            disp('goal');
-            round(boundaries(1,1)*100) + addI
-            round(boundaries(1,2)*100) + addJ
-            
-            disp('start');
-            round(youbotPos(1)*100) + addI
-            round(youbotPos(2)*100) + addJ
-            
-            goal = [round(boundaries(1,1)*100) + addI,round(boundaries(1,2)*100)+addJ];
-            start = [round(youbotPos(1)*100) + addI,round(youbotPos(2)*100)+addJ];
+            goal = [round(boundaries(1,1)*10) + addI,round(boundaries(1,2)*10)+addJ]
+            start = [round(youbotPos(1)*10-11) + addI,round(youbotPos(2)*10)+addJ]
+            %cm: !!!!!! j'ai remis un -1 pour que ça fonctionne avec 1, -11 avec 10, c'est ok
+            %dans ce cas, peut poser des problèmes dans la suite!!!!!!
             ds = Dstar(map);    % create navigation object
             ds.plan(goal)       % create plan for specified goal
             ds.path(start)      % animate path from this start location
