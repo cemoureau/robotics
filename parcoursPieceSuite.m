@@ -121,10 +121,10 @@ function parcoursPieceSuite(arg)
         end
 
         if toPlot == 1
-        subplot(1,2,1)
-        title('Subplot 1: Obstacles')
+       % subplot(1,2,1)
+       % title('Subplot 1: Obstacles')
         hold on
-        plot(pts(1, contacts), pts(2, contacts), '*');
+        plot(pts(1, contacts), pts(2, contacts), 'g*');
         
         plot(youbotPos(1),youbotPos(2),'go');
         axis([-10, 10, -10, 10]);
@@ -132,8 +132,8 @@ function parcoursPieceSuite(arg)
         drawnow;
         hold off
             
-        subplot(1,2,2)
-        title('Subplot 2: Sensor vision')
+       % subplot(1,2,2)
+       % title('Subplot 2: Sensor vision')
         hold on
         plot([h.hokuyo1Pos(1), pts(1, :), h.hokuyo2Pos(1)], [h.hokuyo1Pos(2), pts(2, :), h.hokuyo2Pos(2)])
         fill([h.hokuyo1Pos(1), pts(1, :), h.hokuyo2Pos(1)], [h.hokuyo1Pos(2), pts(2, :), h.hokuyo2Pos(2)],'b')
@@ -159,12 +159,19 @@ function parcoursPieceSuite(arg)
             %The goal is to reach to point of toSave2 which is the most far
             %away from the robot and which is not a wall
             boundaries = setxor(toSave2,toSave,'rows'); 
-            subplot(1,2,2)
+            %subplot(1,2,2)
             hold on
-            plot(boundaries(:,1),boundaries(:,2),'r*');
+            plot(boundaries(:,1),boundaries(:,2),'ro');
             hold off
+            
+           m1 = max(round(toSave(:,1).*10));
+           m2 = max(round(toSave2(:,1).*10));
+           m3 = max(round(toSave(:,2).*10));
+           m4= max(round(toSave2(:,2).*10));
+           
+           
 
-            figure;
+           
             i = round(toSave(:,1).*10);
             j = round(toSave(:,2).*10);
             %v = ones(length(i),1);
@@ -181,13 +188,23 @@ function parcoursPieceSuite(arg)
             nonegi = double(i + addI);
             nonegj = double(j + addJ);
             
-            map = sparse(nonegi,nonegj,1);
+            xmax = max(m1,m2)+ addI;
+            ymax = max(m3,m4)+ addJ;
+            
+            map = sparse(nonegi,nonegj,1,double(xmax),double(ymax));
             map(map>1)=1;
             
-            goal = [round(boundaries(1,1)*10) + addI,round(boundaries(1,2)*10)+addJ]
-            start = [round(youbotPos(1)*10-11) + addI,round(youbotPos(2)*10)+addJ]
-            %cm: !!!!!! j'ai remis un -1 pour que ça fonctionne avec 1, -11 avec 10, c'est ok
-            %dans ce cas, peut poser des problèmes dans la suite!!!!!!
+             figure;
+            imagesc(map); 
+            hold on
+            plot(round(youbotPos(2)*10)+addJ, round(youbotPos(1)*10) + addI, 'g*');
+            plot(round(boundaries(188,2)*10)+addJ,round(boundaries(188,1)*10) + addI,'r*');
+            hold off
+            
+            figure;
+            goal = [round(boundaries(188,2)*10)+addJ,round(boundaries(188,1)*10) + addI];
+            start = [round(youbotPos(2)*10)+addJ, round(youbotPos(1)*10) + addI];
+            %cm: !!!!!! il faut inverser x et y !!!!!!
             ds = Dstar(map);    % create navigation object
             ds.plan(goal)       % create plan for specified goal
             ds.path(start)      % animate path from this start location
